@@ -1,0 +1,27 @@
+.form{
+    margin:0 auto;
+    margin-top:5%;
+    width:550px;
+    border:solid 0.5px rgb(56, 54, 54);
+    border-radius: 10px;
+    box-shadow: 1px 1px 15px rgb(46, 46, 46);
+    padding:1% 5%;
+}
+
+.logbut{
+    margin: 0 auto;
+    width:25%;
+    justify-content: center;
+}
+
+#username:focus , #pwd:focus{
+    outline:none;
+    box-shadow:none;
+}
+.sign{
+    /* text-decoration: ; */
+    margin: 0 auto;
+    width:65%;
+    margin-bottom: 15px;
+    justify-content: center;
+}

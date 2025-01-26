@@ -1,0 +1,55 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth/register.css' %}">
+    <title>Register</title>
+</head>
+<body class="bg-dark text-light">
+    <div class="container-fluid d-flex justify-content-center mt-5  ">
+        <h1>Welcome to DarkChat</h1>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+            <div class="container-fluid form">
+            <div class="mb-3 mt-3">
+                <label for="{{form.username.id_for_label}}" class="form-label">{{form.username.label}}</label>
+                {{form.username}}
+                {% if form.usernmae.errors %}
+                <div class="errors">{{form.username.errors}}</div>
+                {% endif %}
+                <!-- <input type="text" class="form-control" placeholder="Enter your username" name="username" id="username"> -->
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="{{form.password.id_for_label}}" class="form-label">{{form.password.label}}</label>
+                {{form.password}}
+                {% if form.password.errors%}
+                <div class="errors">{{form.password.errors}}</div>
+                {% endif %}
+                <!-- <input type="password" class="form-control" placeholder="Enter your Password" name="password" id="password"> -->
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="{{form.password_confirm.id_for_label}}" class="form-label">{{form.password_confirm.label}}</label>
+                {{ form.password_confirm }}
+                {% if form.password_confirm.errors %}
+                <div class="errors">{{form.password_confirm.errors}}</div>
+                {% endif %}
+                <!-- <input type="password" class="form-control" placeholder="Enter your Password again" name="password-confirm" id="password"> -->
+            </div>
+            <div class="mb-3 mt-3">
+                {% if form.non_field_errors %}
+                <div class="errors">{{form.non_field_errors}}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3 mt-3">
+                <button type="submit" class="btn btn-primary d-flex logbut mb-3">Sign-in</button>               
+            </div>
+                <a href="{% url 'Authen.login' %}" class=" d-flex sign">Already have an account? click to Login</a>
+        </div>
+        </form>
+    
+</body>
+</html>
+<script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>

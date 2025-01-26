@@ -1,0 +1,34 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/master.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body class="" data-bs-theme="dark">
+    <div class="container-fluid">
+
+        <div class="row bg-dark align-items-center p-2">
+            <div class="col-md-6 d-flex align-items-center">
+                <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="img-fluid rounded-pill" style="max-height: 45px;">
+                <h1 class="ml-2">Dark Chat - {% block header %}{% endblock %}</h1>
+            </div>
+            <div class="col-md-5">
+                
+            </div>
+            <div class="col-md-1 text-right">
+                <a href="{% url 'Authen.logout' %}">
+                    <button class="btn btn-danger">Logout</button>
+                </a>
+            </div>
+        </div>
+        
+        {% block content %}
+        {% endblock %}
+
+</div>
+<script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
+</body>
+</html>
