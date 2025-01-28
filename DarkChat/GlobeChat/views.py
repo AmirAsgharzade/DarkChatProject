@@ -20,16 +20,16 @@ class IndexView(LoginRequiredMixin,TemplateView):
 
 class GlobeHistoryMessages(View):
     http_method_names = ['get']
-    def get(self,request,*args,**kwargs):
+    async def get(self,request,*args,**kwargs):
         messages = GlobeHistory.objects.all().order_by('timestamp').values()
         # data = {'messages':list(messages)}
         # print(messages)
         return JsonResponse(list(messages),safe=False)
 
 class MessageSent(View):
-    def get(self,request,*args,**kwargs):
+    async def get(self,request,*args,**kwargs):
         return HttpResponse('Method Not allowed',status=405)
-    def post(self,request,*args,**kwargs):
+    async def post(self,request,*args,**kwargs):
         data = json.loads(request.body)
         user = CustomUser.objects.get(username=data['username'])
         if user:

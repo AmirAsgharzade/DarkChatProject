@@ -41,8 +41,8 @@
 <!-- <script src="{% static 'js/GlobeChat/index.js' %}"> -->
     <script>
 
-function fetchMessages() {
-            fetch('{% url "load_messages" %}')
+async function fetchMessages() {
+            await fetch('{% url "load_messages" %}')
             .then(response => response.json())
             .then(data => {
                 const container = $('#message-container');
@@ -65,7 +65,7 @@ function fetchMessages() {
     
 setInterval(fetchMessages, 500);
 
-function Send() {
+async function Send() {
         const usernameContent = document.getElementById('Username').value
         const messageInput = document.getElementById('Message');
         const messageContent = messageInput.value;
@@ -74,7 +74,7 @@ function Send() {
             return;
         }
     
-        fetch('{% url "send_message" %}', {
+        await fetch('{% url "send_message" %}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
