@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET
 from .models import GlobeHistory
 from Authen.models import CustomUser
 import json
+import asyncio
 global folder 
 folder = 'GlobeChat/'
 
@@ -21,23 +22,36 @@ class IndexView(LoginRequiredMixin,TemplateView):
 class GlobeHistoryMessages(View):
     http_method_names = ['get']
     async def get(self,request,*args,**kwargs):
-        messages = GlobeHistory.objects.all().order_by('timestamp').values()
+        loop = asyncio.get_event_loop()
+
+        messages = await loop.run_in_executor(None,self.get_history)
         # data = {'messages':list(messages)}
         # print(messages)
-        return JsonResponse(list(messages),safe=False)
+        return JsonResponse(messages,safe=False)
+
+    def get_history(self):
+        return list(GlobeHistory.objects.all().order_by('timestamp').values())
 
 class MessageSent(View):
     async def get(self,request,*args,**kwargs):
         return HttpResponse('Method Not allowed',status=405)
     async def post(self,request,*args,**kwargs):
+        loop = asyncio.get_event_loop()
         data = json.loads(request.body)
-        user = CustomUser.objects.get(username=data['username'])
+
+        user = await loop.run_in_executor(None,self.get_user,data['username'])
         if user:
-            message = GlobeHistory.objects.create(
-            user=user,username=user.username,color=user.color,content= data['content']
+            await loop.run_in_executor(None,self.create_message,user,data['content'])
+        return JsonResponse({'sent':True},status=201)
+    
+    def get_user(self,username):
+        return CustomUser.objects.get(username=username)
+    def create_message(self,user,content):
+        message = GlobeHistory.objects.create(
+            user=user,username=user.username,color=user.color,content= content
             )
         message.save()
-        return JsonResponse({'sent':True},status=201)
+        return True
 
 
 def test(request):

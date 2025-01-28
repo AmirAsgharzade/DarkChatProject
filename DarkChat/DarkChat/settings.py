@@ -90,8 +90,8 @@ WSGI_APPLICATION = 'DarkChat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'NAME': ':memory:', # this is for testing
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': ':memory:', # this is for testing
     }
 }
 
