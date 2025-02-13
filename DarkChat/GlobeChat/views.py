@@ -10,6 +10,9 @@ from .models import GlobeHistory
 from Authen.models import CustomUser
 import json
 import asyncio
+from django.core.cache import cache
+
+
 global folder 
 folder = 'GlobeChat/'
 
@@ -22,15 +25,19 @@ class IndexView(LoginRequiredMixin,TemplateView):
 class GlobeHistoryMessages(View):
     http_method_names = ['get']
     async def get(self,request,*args,**kwargs):
+        offset = int(request.GET.get('offset',0))  # Default to 0 if not provided
+        limit = int(request.GET.get('limit', 20))
         loop = asyncio.get_event_loop()
+        messages = await loop.run_in_executor(None,cache.get,'messages')
+        if not messages:
+            messages = await loop.run_in_executor(None,self.get_history)
+            cache.set('messages',messages,timeout=60)
+            # data = {'messages':list(messages)}
+            # print(messages)
+        return JsonResponse(messages[offset:offset+limit],safe=False)
 
-        messages = await loop.run_in_executor(None,self.get_history)
-        # data = {'messages':list(messages)}
-        # print(messages)
-        return JsonResponse(messages,safe=False)
-
-    def get_history(self):
-        return list(GlobeHistory.objects.all().order_by('timestamp').values())
+    def get_history(self,*args):
+        return list(GlobeHistory.objects.all().order_by('-timestamp').values())
 
 class MessageSent(View):
     async def get(self,request,*args,**kwargs):
@@ -42,6 +49,7 @@ class MessageSent(View):
         user = await loop.run_in_executor(None,self.get_user,data['username'])
         if user:
             await loop.run_in_executor(None,self.create_message,user,data['content'])
+            await loop.run_in_executor(None,cache.delete,'messages')
         return JsonResponse({'sent':True},status=201)
     
     def get_user(self,username):
